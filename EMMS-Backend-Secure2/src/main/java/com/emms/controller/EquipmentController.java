@@ -17,7 +17,7 @@ import com.emms.api.EquipmentApi;
 import com.emms.inventoryModel.Equipment;
 
 @RestController
-@RequestMapping("/api/inventory")
+@RequestMapping("/api/inventory/")
 @CrossOrigin(origins ="*",allowedHeaders = "*",exposedHeaders = "*")
 public class EquipmentController {
 	

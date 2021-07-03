@@ -47,6 +47,7 @@ public class EquipmentCategoryDataAdapterImpl implements EquipmentCategoryDataAd
 	@Override
 	public EquipmentCategories saveEquipmentCategory(EquipmentCategories category) {
 		category.setCategoryId(generateId());
+		categoryRepo.save(category);
 		System.out.println("Savning category : " +  category.toString());
 		return category;
 	}
