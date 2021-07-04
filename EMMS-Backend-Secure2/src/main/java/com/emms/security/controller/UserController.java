@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,5 +45,14 @@ public class UserController {
 		return userApi.updateUser(userUpdateRequest);
 	}
 	
+	@PutMapping("enable")
+	public int enableUser(@PathVariable int id) {
+		return userApi.enableUser(id);
+	}
+	
+	@PutMapping("disable")
+	public int disabelUser(@PathVariable int id) {
+		return userApi.disableUser(id);
+	}
 
 }

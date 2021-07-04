@@ -63,6 +63,13 @@ public class UserApi {
 		return userDataAdapter.update(user);
 	}
 	
+	public int enableUser(int id) {
+		return userDataAdapter.enableUser(id);
+	}
+	
+	public int disableUser(int id) {
+		return userDataAdapter.disableUser(id);
+	}
 	
 
 }

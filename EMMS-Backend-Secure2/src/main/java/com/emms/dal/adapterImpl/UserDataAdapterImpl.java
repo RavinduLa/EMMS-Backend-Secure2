@@ -50,4 +50,23 @@ public class UserDataAdapterImpl implements UserDataAdapter {
 		return userRepository.findAll();
 	}
 
+	@Override
+	public int enableUser(int id) {
+		User user = userRepository.findById(id).get();  //get the user by id
+		user.setEnabled(true);  //enable the user
+		userRepository.save(user);  //save the user
+		return id;
+	}
+
+	@Override
+	public int disableUser(int id) {
+		//get the user by id
+		User user = userRepository.findById(id).get();
+		//disable the user
+		user.setEnabled(false);
+		//save the user
+		userRepository.save(user);
+		return id;
+	}
+
 }
