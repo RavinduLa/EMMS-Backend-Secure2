@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emms.api.UserApi;
 import com.emms.model.RegistrationRequest;
 import com.emms.model.User;
+import com.emms.model.UserResponse;
+import com.emms.model.UserRoleUpdateRequest;
 import com.emms.model.UserUpdateRequest;
 
 @RestController
@@ -53,6 +56,22 @@ public class UserController {
 	@PutMapping("disable")
 	public int disabelUser(@PathVariable int id) {
 		return userApi.disableUser(id);
+	}
+	
+	@GetMapping("get-user/{id}")
+	public UserResponse getUserById(@PathVariable int id) {
+		return userApi.getUseById(id);
+	}
+	
+	@PutMapping("updateUserByUsername")
+	public UserResponse updateUserById(@RequestBody UserRoleUpdateRequest userRoleUpdateRequest) {
+		System.out.println("Controller -  username : "+ userRoleUpdateRequest.getUsername());
+		return userApi.updateUserByUsername(userRoleUpdateRequest);
+	}
+	
+	@DeleteMapping("deleteUser/{id}")
+	public int deleteUserById(@PathVariable int id) {
+		return userApi.deleteUser(id);
 	}
 
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.emms.dal.adapter.UserDataAdapter;
 import com.emms.model.RegistrationRequest;
 import com.emms.model.User;
+import com.emms.model.UserResponse;
+import com.emms.model.UserRoleUpdateRequest;
 import com.emms.model.UserUpdateRequest;
 
 @Service
@@ -69,6 +71,42 @@ public class UserApi {
 	
 	public int disableUser(int id) {
 		return userDataAdapter.disableUser(id);
+	}
+	
+	public UserResponse getUseById(int id) {
+		
+		//instantiate user object
+		User user = userDataAdapter.getUserById(id);
+		
+		//instantiate UserResponse object
+		UserResponse userResponse = new UserResponse();
+		
+		//set the object attributes
+		userResponse.setUsername(user.getUsername());
+		userResponse.setEnabled(user.isEnabled());
+		userResponse.setRoles(user.getRoles());
+		
+		return userResponse;
+	}
+	
+	public UserResponse updateUserByUsername(UserRoleUpdateRequest userRoleUpdateRequest) {
+		
+		//instantiate user object
+		User user = userDataAdapter.updateByUsername(userRoleUpdateRequest);
+		
+		//instantiate UserResponse object
+		UserResponse userResponse = new UserResponse();
+		
+		//set the object attributes
+		userResponse.setUsername(user.getUsername());
+		userResponse.setEnabled(user.isEnabled());
+		userResponse.setRoles(user.getRoles());
+		
+		return userResponse;
+	}
+	
+	public int deleteUser(int id) {
+		return userDataAdapter.delete(id);
 	}
 	
 

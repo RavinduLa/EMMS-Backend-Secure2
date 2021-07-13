@@ -23,7 +23,7 @@ import com.emms.dao.UserRepository;
 import com.emms.model.AuthenticationRequest;
 import com.emms.model.AuthenticationResponse;
 import com.emms.model.User;
-import com.emms.model.UserReponse;
+import com.emms.model.UserResponse;
 import com.emms.util.JwtUtil;
 
 @RestController
@@ -69,9 +69,9 @@ public class LoginController {
 	}
 	
 	@GetMapping("/get-user-details")
-	public UserReponse getUserDetails(String username) {
+	public UserResponse getUserDetails(String username) {
 		User user = userRepository.getUserByUsername(username);
-		UserReponse userResponse = new UserReponse();
+		UserResponse userResponse = new UserResponse();
 		userResponse.setUsername(user.getUsername());
 		return userResponse;
 	}

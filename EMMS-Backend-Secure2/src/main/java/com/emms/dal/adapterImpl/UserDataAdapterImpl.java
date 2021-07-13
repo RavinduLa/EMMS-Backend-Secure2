@@ -1,6 +1,7 @@
 package com.emms.dal.adapterImpl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.emms.dal.adapter.UserDataAdapter;
 import com.emms.dao.UserRepository;
 import com.emms.model.User;
+import com.emms.model.UserRoleUpdateRequest;
 
 @Component
 public class UserDataAdapterImpl implements UserDataAdapter {
@@ -40,8 +42,9 @@ public class UserDataAdapterImpl implements UserDataAdapter {
 
 	@Override
 	public int delete(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		userRepository.deleteById(id);
+		System.out.println("Deleted user with id : " + id);
+		return id;
 	}
 
 	@Override
@@ -67,6 +70,29 @@ public class UserDataAdapterImpl implements UserDataAdapter {
 		//save the user
 		userRepository.save(user);
 		return id;
+	}
+
+	@Override
+	public User getUserById(int id) {
+		System.out.println("Returning user for id : "+id);
+		
+		try {
+			User user = userRepository.findById(id).get();
+			System.out.println("User found. Returning user : "+user);
+			return user;
+		}catch(NoSuchElementException e) {
+			System.out.println("User not found! Returning emptty User object");
+			return new User();
+		}
+		
+	}
+
+	@Override
+	public User updateByUsername(UserRoleUpdateRequest userRoleUpdateRequest) {
+		System.out.println("Updating User roles with username : "+userRoleUpdateRequest.getUsername());
+		User user = userRepository.getUserByUsername(userRoleUpdateRequest.getUsername());
+		user.setRoles(userRoleUpdateRequest.getRoles());
+		return userRepository.save(user);
 	}
 
 }
