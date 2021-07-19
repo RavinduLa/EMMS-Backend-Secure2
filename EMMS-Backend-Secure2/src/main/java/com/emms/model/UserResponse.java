@@ -4,6 +4,7 @@ import java.util.Set;
 
 public class UserResponse {
 	
+	private int id;
 	private String username;
 	private boolean enabled;
 	private Set<Role> roles;
@@ -12,16 +13,27 @@ public class UserResponse {
 		
 	}
 
-	
 
-	public UserResponse(String username, boolean enabled, Set<Role> roles) {
+
+
+	public UserResponse(int id, String username, boolean enabled, Set<Role> roles) {
 		super();
+		this.id = id;
 		this.username = username;
 		this.enabled = enabled;
 		this.roles = roles;
 	}
 
 
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getUsername() {
 		return username;
@@ -59,7 +71,7 @@ public class UserResponse {
 
 	@Override
 	public String toString() {
-		return "UserReponse [username=" + username + ", enabled=" + enabled + ", roles=" + roles + "]";
+		return "UserResponse [id=" + id + ", username=" + username + ", enabled=" + enabled + ", roles=" + roles + "]";
 	}
 
 

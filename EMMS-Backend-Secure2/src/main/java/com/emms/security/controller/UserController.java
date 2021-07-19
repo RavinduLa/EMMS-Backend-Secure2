@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emms.api.UserApi;
+import com.emms.model.PasswordResetRequest;
 import com.emms.model.RegistrationRequest;
 import com.emms.model.User;
 import com.emms.model.UserResponse;
@@ -48,12 +49,12 @@ public class UserController {
 		return userApi.updateUser(userUpdateRequest);
 	}
 	
-	@PutMapping("enable")
+	@PutMapping("enable/{id}")
 	public int enableUser(@PathVariable int id) {
 		return userApi.enableUser(id);
 	}
 	
-	@PutMapping("disable")
+	@PutMapping("disable/{id}")
 	public int disabelUser(@PathVariable int id) {
 		return userApi.disableUser(id);
 	}
@@ -72,6 +73,12 @@ public class UserController {
 	@DeleteMapping("deleteUser/{id}")
 	public int deleteUserById(@PathVariable int id) {
 		return userApi.deleteUser(id);
+	}
+	
+	@PutMapping("resetPassword")
+	public UserResponse resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+		System.out.println("Controller reset request : " +passwordResetRequest.getId() );
+		return userApi.resetPassword(passwordResetRequest);
 	}
 
 }

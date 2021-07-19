@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.emms.dal.adapter.UserDataAdapter;
+import com.emms.model.PasswordResetRequest;
 import com.emms.model.RegistrationRequest;
 import com.emms.model.User;
 import com.emms.model.UserResponse;
@@ -82,6 +83,7 @@ public class UserApi {
 		UserResponse userResponse = new UserResponse();
 		
 		//set the object attributes
+		userResponse.setId(user.getId());
 		userResponse.setUsername(user.getUsername());
 		userResponse.setEnabled(user.isEnabled());
 		userResponse.setRoles(user.getRoles());
@@ -98,6 +100,7 @@ public class UserApi {
 		UserResponse userResponse = new UserResponse();
 		
 		//set the object attributes
+		userResponse.setId(user.getId());
 		userResponse.setUsername(user.getUsername());
 		userResponse.setEnabled(user.isEnabled());
 		userResponse.setRoles(user.getRoles());
@@ -105,8 +108,40 @@ public class UserApi {
 		return userResponse;
 	}
 	
+	//delete a user
 	public int deleteUser(int id) {
 		return userDataAdapter.delete(id);
+	}
+	
+	//reset the password of a user.
+	public UserResponse resetPassword(PasswordResetRequest resetRequest) {
+		
+		//get the user for the id
+		System.out.println("Resetting Password...");
+		System.out.println("Requesting User object for id: "+ resetRequest.getId());
+		User user = userDataAdapter.getUserById(resetRequest.getId());
+		//instantiate encoder
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		//get raw password
+		String rawPassword = resetRequest.getNewPassword();
+		//encode the password
+		String encodedPassword = encoder.encode(rawPassword);
+		
+		//set the new encoded password
+		user.setPassword(encodedPassword);
+		
+		//save the updated user
+		User updatedUser = userDataAdapter.update(user);
+		
+		//instantiate and set the user response
+		UserResponse userResponse = new UserResponse();
+		userResponse.setId(updatedUser.getId());
+		userResponse.setUsername(updatedUser.getUsername());
+		userResponse.setRoles(updatedUser.getRoles());
+		userResponse.setEnabled(updatedUser.isEnabled());
+		
+		return userResponse;
+		
 	}
 	
 

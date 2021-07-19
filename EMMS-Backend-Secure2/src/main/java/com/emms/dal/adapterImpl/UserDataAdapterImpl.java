@@ -81,7 +81,7 @@ public class UserDataAdapterImpl implements UserDataAdapter {
 			System.out.println("User found. Returning user : "+user);
 			return user;
 		}catch(NoSuchElementException e) {
-			System.out.println("User not found! Returning emptty User object");
+			System.out.println("User not found! Returning empty User object");
 			return new User();
 		}
 		
@@ -94,5 +94,6 @@ public class UserDataAdapterImpl implements UserDataAdapter {
 		user.setRoles(userRoleUpdateRequest.getRoles());
 		return userRepository.save(user);
 	}
+
 
 }
