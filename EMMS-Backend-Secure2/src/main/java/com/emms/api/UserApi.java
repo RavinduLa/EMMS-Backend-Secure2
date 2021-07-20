@@ -144,5 +144,18 @@ public class UserApi {
 		
 	}
 	
+	public UserResponse getUserByUsername(String username) {
+		//get the user by the username
+		User user = userDataAdapter.getUserByUsername(username);
+		
+		UserResponse userResponse = new UserResponse();
+		userResponse.setId(user.getId());
+		userResponse.setUsername(user.getUsername());
+		userResponse.setRoles(user.getRoles());
+		userResponse.setEnabled(user.isEnabled());
+		
+		return userResponse;
+	}
+	
 
 }

@@ -95,5 +95,12 @@ public class UserDataAdapterImpl implements UserDataAdapter {
 		return userRepository.save(user);
 	}
 
+	//get user by the username
+	@Override
+	public User getUserByUsername(String username) {
+		
+		return userRepository.getUserByUsername(username);
+	}
+
 
 }

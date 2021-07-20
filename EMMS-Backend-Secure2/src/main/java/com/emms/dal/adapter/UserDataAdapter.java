@@ -15,5 +15,6 @@ public interface UserDataAdapter {
 	public int disableUser(int id);
 	public int delete(int id);
 	public User getUserById(int id);
+	public User getUserByUsername(String username);
 
 }
