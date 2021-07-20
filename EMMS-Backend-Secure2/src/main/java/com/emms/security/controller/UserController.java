@@ -80,5 +80,10 @@ public class UserController {
 		System.out.println("Controller reset request : " +passwordResetRequest.getId() );
 		return userApi.resetPassword(passwordResetRequest);
 	}
+	
+	@GetMapping("isUsernameAvailable/{username}")
+	public boolean isUsernameAvailable(@PathVariable String username) {
+		return userApi.isUsernameAvailable(username);
+	}
 
 }

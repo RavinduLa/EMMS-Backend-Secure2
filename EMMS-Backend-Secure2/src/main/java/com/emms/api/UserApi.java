@@ -52,6 +52,20 @@ public class UserApi {
 		return userDataAdapter.getAll();
 	}
 	
+	public boolean isUsernameAvailable(String username) {
+		//get the user list
+		List<User> users = this.getAllUsers();
+		
+		//iterate through the user list
+		for(User u : users) {
+			if(u.getUsername().equals(username)) {
+				return false;
+			}
+		}
+		//return true if username is not found
+		return true;
+	}
+	
 	public User updateUser(UserUpdateRequest userUpdateRequest) {
 		System.out.println("API : Updating user with username : " + userUpdateRequest.getUsername());
 		
