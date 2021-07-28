@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emms.api.SupplierApi;
 import com.emms.inventoryModel.Supplier;
 
+//@RequestMapping("/api/inventory")
+
 @RestController
-@RequestMapping("/api/inventory")
+@RequestMapping("/api/supplier")
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "*")
 public class SupplierController {
 	

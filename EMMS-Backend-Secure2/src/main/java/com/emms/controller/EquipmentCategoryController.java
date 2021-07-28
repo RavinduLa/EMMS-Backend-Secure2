@@ -18,8 +18,10 @@ import com.emms.inventoryModel.Brand;
 import com.emms.inventoryModel.CategoryBrand;
 import com.emms.inventoryModel.EquipmentCategories;
 
+//@RequestMapping("/api/inventory/")
+
 @RestController
-@RequestMapping("/api/inventory/")
+@RequestMapping("/api/category/")
 @CrossOrigin(origins ="*",allowedHeaders = "*",exposedHeaders = "*")
 public class EquipmentCategoryController {
 	
