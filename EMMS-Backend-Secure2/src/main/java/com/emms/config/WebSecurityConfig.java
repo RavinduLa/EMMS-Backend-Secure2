@@ -61,11 +61,61 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests().antMatchers("/authenticate").permitAll()
 		.antMatchers("/admin").hasAuthority("ADMIN")
 		.antMatchers("/some").hasAnyAuthority("ADMIN","LEADER")
-		.antMatchers("/api/inventory/**").hasAnyAuthority("ADMIN","LEADER")
 		
-		.antMatchers("/api/supplier/**").hasAnyAuthority("ADMIN")
+		//inventory access control
+		//.antMatchers("/api/inventory/**").hasAnyAuthority("ADMIN","LEADER")
+		
+		.antMatchers("/api/inventory/equipment/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
+		.antMatchers("/api/inventory/getEquipmentById/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/checkIdAvailability/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/addEquipment/").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/updateEquipment/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/deleteEquipment/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/inventory/assetCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getDepartmentAssetCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getTypeDeptAssetCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getLocationAssetCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getSupplierAssetCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/underWarrantyCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/noWarrantyCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getEquipmentForSupplier/**").hasAnyAuthority("ADMIN","LEADER","VIEWER")
+		.antMatchers("/api/inventory/getEquipmentForLocation/**").hasAnyAuthority("ADMIN","LEADER","VIEWER")
+		.antMatchers("/api/inventory/getEquipmentForDepartment/**").hasAnyAuthority("ADMIN","LEADER","VIEWER")
+		.antMatchers("/api/inventory/equipmentDepartmentCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/equipmentLocationCount/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getEquipmentForLocationAndDepartment/**").hasAnyAuthority("ADMIN","LEADER")
+		
+		.antMatchers("/api/inventory/getEquipmentForAssetId/**").hasAnyAuthority("ADMIN","LEADER","VIEWER")
+		.antMatchers("/api/inventory/getEquipmentForSerialNumber/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
+		
+		.antMatchers("/api/inventory/getEquipmentForTimePeriod/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getUnderWarrantyEquipment/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
+		.antMatchers("/api/inventory/getNoWarrantyEquipment/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
+		
+		//access control for adInventory
+		.antMatchers("/api/addInventory/**").hasAnyAuthority("ADMIN","LEADER","EDITOR")
+		
+		//supplier access control
+		//.antMatchers("/api/supplier/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/supplier/allSuppliers/**").hasAnyAuthority("ADMIN", "LEADER", "VIEWER")
+		.antMatchers("/api/supplier/addSupplier/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/supplier/getSupplierById/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/supplier/isSupplierAvailable/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/supplier/editSupplier/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/supplier/deleteSupplierById/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/supplier/getSupplierNameForId/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
+		
+		//access control for model
 		.antMatchers("/api/model/**").hasAnyAuthority("ADMIN")
-		.antMatchers("/api/department/**").hasAnyAuthority("ADMIN")
+		
+		//access control for department
+		//.antMatchers("/api/department/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/department/allDepartments/**").hasAnyAuthority("ADMIN", "LEADER", "VIEWER")
+		.antMatchers("/api/department/addDepartment/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/department/getIdAvailability/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/department/deleteDepartment/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/department/getDepartmentNameById/**").hasAnyAuthority("ADMIN", "LEADER", "VIEWER")
+		
 		.antMatchers("/api/brand/**").hasAnyAuthority("ADMIN")
 		.antMatchers("/api/category/**").hasAnyAuthority("ADMIN")
 		.antMatchers("/api/user/**").hasAnyAuthority("ADMIN")
