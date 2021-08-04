@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.emms</groupId>
 	<artifactId>EMMS-Backend-Secure2</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<name>EMMS-Backend-Secure2</name>
 	<description>Secureed Backend for EMMS 2</description>
 	<properties>

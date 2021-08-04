@@ -50,7 +50,7 @@ public class DepartmentDataAdapterImpl implements DepartmentDataAdapter {
 		da.setCreatedDate(date);
 		da.setStatus("active");
 		
-		DepartmentArchive daSaved = new DepartmentArchive();
+		DepartmentArchive daSaved = departmentArchiveRepository.save(da);
 		
 		System.out.println("Saved department : " + dep.toString());
 		System.out.println("Saved department archive: " + daSaved.toString()  );

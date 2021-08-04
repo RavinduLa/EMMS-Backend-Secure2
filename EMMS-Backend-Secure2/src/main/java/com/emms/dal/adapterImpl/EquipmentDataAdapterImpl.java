@@ -39,11 +39,12 @@ public class EquipmentDataAdapterImpl implements EquipmentDataAdapter {
 
 	@Override
 	public List<Equipment> getAll() {
-		String result = equipmentrepo.findAll().toString();
+		/*String result = equipmentrepo.findAll().toString();
 		System.out.println("Returning all equipment");
-		System.out.println(result);
+		System.out.println(result);*/
 		
 		List<Equipment> equipmentList = new ArrayList<>();
+		equipmentList = equipmentrepo.findAll();
 		
 		for(Equipment e: equipmentList) {
 			int supplierId  = e.getSupplier();
@@ -54,6 +55,10 @@ public class EquipmentDataAdapterImpl implements EquipmentDataAdapter {
 			e.setSupplierName(supplierName);
 			e.setDepartmentName(departmentName);
 		}
+		
+		System.out.println("Returning all equipment.");
+		System.out.println(equipmentList.toString());
+		
 		return equipmentList;
 	}
 

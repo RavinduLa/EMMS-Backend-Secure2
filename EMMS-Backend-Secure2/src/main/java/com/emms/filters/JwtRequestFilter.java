@@ -18,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.emms.UserDetialsServiceImpl;
 import com.emms.util.JwtUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 	
@@ -27,10 +29,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	JwtUtil jwtUtil;
 
+		
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-final String authorizationHeader = request.getHeader("Authorization");
+		
+		try {
+		
+		final String authorizationHeader = request.getHeader("Authorization");
 		
 		String username = null;
 		String jwt =  null;
@@ -40,11 +47,20 @@ final String authorizationHeader = request.getHeader("Authorization");
 			username = jwtUtil.extractUsername(jwt);
 		}
 		
+		
+			
+			
 		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			
 			UserDetails userDetails = this.userdetailsServiceImpl.loadUserByUsername(username);
 			
+			//System.out.println("Validating token.");
+			
+				
+			
 			if(jwtUtil.validateToken(jwt, userDetails)) {
+				
+				//System.out.println("Token validated.");
 				
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
 						new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -55,10 +71,23 @@ final String authorizationHeader = request.getHeader("Authorization");
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 				
 			}
+			
+			
 		}
+		
+		
+		}catch (ExpiredJwtException e) {
+			// TODO: handle exception
+			System.out.println("Expired JWT detected.");
+			System.out.println("Details of expiration : "+ e.getMessage());
+			//logger.error("Details of expiration : ", e);
+		}
+		
 		//this was chain in the tutorial :)
 		filterChain.doFilter(request, response);
 		
-	}
+	} // doFilterInternal
+	
+
 
 }

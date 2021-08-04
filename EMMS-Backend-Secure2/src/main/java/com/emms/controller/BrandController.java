@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.emms.api.BrandApi;
 import com.emms.inventoryModel.Brand;
 
+//@RequestMapping("/api/inventory/")
+
 @RestController
-@RequestMapping("/api/inventory/")
+@RequestMapping("/api/brand/")
 @CrossOrigin(origins ="*",allowedHeaders = "*",exposedHeaders = "*")
 public class BrandController {
 	
