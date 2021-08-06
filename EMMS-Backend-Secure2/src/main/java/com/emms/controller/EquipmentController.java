@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emms.api.EquipmentApi;
+import com.emms.inventoryModel.CondemnedEquipment;
 import com.emms.inventoryModel.Equipment;
+import com.emms.inventoryModel.PendingCondemnEquipment;
+import com.emms.inventoryRequestModels.CondemnRequest;
 
 @RestController
 @RequestMapping("/api/inventory/")
@@ -149,7 +152,40 @@ public class EquipmentController {
 		return equipmentApi.getNoWarrantyEquipment();
 	}
 	
+	@GetMapping(value="getPendingCondemnEquipment")
+	public List<PendingCondemnEquipment> getAllPendingCondemnEquipment(){
+		return equipmentApi.getAllPendingCondemnEquipment();
+	}
 	
+	@GetMapping(value="getAllCondemnedEquipment")
+	public List<CondemnedEquipment> getAllCondemnedEquipment(){
+		return equipmentApi.getAllCondemnedEquipment();
+	}
+	
+	@PostMapping(value="requestEquipmentCondemn")
+	public PendingCondemnEquipment requestEquipmentCondemn(@RequestBody CondemnRequest condemnRequest) {
+		return equipmentApi.requestEquipmentCondemn(condemnRequest);
+	}
+	
+	@DeleteMapping(value="cancelCondemnRequest/{assetId}")
+	public long cancelCondemnRequest(@PathVariable long assetId) {
+		return equipmentApi.cancelCondemnRequest(assetId);
+	}
+	
+	@GetMapping(value="performCondemn/{assetId}")
+	public long performCondemn(@PathVariable long assetId) {
+		return equipmentApi.performCondemn(assetId);
+	}
+	
+	@GetMapping(value="isEquipmentCondemnPending/{assetId}")
+	public boolean isEquipmentMarkedForCondemn(@PathVariable long assetId) {
+		return equipmentApi.isEquipmentMarkedForCondemn(assetId);			
+	}
+	
+	@GetMapping(value="isEquipmentCondemned/{assetId}")
+	public boolean isEquipmentCondemned (@PathVariable long assetId) {
+		return equipmentApi.isEquipmentcondemned(assetId);
+	}
 	
 	
 

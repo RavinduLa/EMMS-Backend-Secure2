@@ -92,7 +92,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/inventory/getUnderWarrantyEquipment/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
 		.antMatchers("/api/inventory/getNoWarrantyEquipment/**").hasAnyAuthority("ADMIN","LEADER", "VIEWER")
 		
-		//access control for adInventory
+		//access control related to equipment condemning
+		.antMatchers("/api/inventory/getPendingCondemnEquipment/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/getAllCondemnedEquipment/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/inventory/requestEquipmentCondemn/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/cancelCondemnRequest/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/performCondemn/**").hasAnyAuthority("ADMIN")
+		.antMatchers("/api/inventory/isEquipmentCondemnPending/**").hasAnyAuthority("ADMIN","LEADER")
+		.antMatchers("/api/inventory/isEquipmentCondemned/**").hasAnyAuthority("ADMIN","LEADER")
+		
+		//access control for addInventory
 		.antMatchers("/api/addInventory/**").hasAnyAuthority("ADMIN","LEADER","EDITOR")
 		
 		//supplier access control

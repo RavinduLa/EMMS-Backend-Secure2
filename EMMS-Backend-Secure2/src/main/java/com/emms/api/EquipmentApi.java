@@ -9,17 +9,28 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.emms.dal.adapter.EquipmentCondemnDataAdapter;
 import com.emms.dal.adapter.EquipmentDataAdapter;
+import com.emms.inventoryModel.CondemnedEquipment;
 import com.emms.inventoryModel.Equipment;
+import com.emms.inventoryModel.PendingCondemnEquipment;
+import com.emms.inventoryRequestModels.CondemnRequest;
 
 @Service
 public class EquipmentApi {
 	
 	private EquipmentDataAdapter equipmentDataAdapter;
+	private EquipmentCondemnDataAdapter equipmentCondemnDataAdapter;
+	private SupplierApi supplierApi;
+	private DepartmentApi departmentApi;
 	
 	@Autowired
-	public EquipmentApi(EquipmentDataAdapter equipmentDataAdapter) {
+	public EquipmentApi(EquipmentDataAdapter equipmentDataAdapter, EquipmentCondemnDataAdapter equipmentCondemnDataAdapter,
+			SupplierApi supplierApi, DepartmentApi departmentApi) {
 		this.equipmentDataAdapter = equipmentDataAdapter;
+		this.equipmentCondemnDataAdapter = equipmentCondemnDataAdapter;
+		this.supplierApi = supplierApi;
+		this.departmentApi = departmentApi;
 	}
 	
 	
@@ -45,7 +56,21 @@ public class EquipmentApi {
 	
 	//gets the availability of the asset id
 	public boolean getIdAvailability (long id) {
-		return equipmentDataAdapter.getIdAvailability(id);
+		//return equipmentDataAdapter.getIdAvailability(id); -- this was available earlier
+		
+		boolean isEquipmentinActiveList = equipmentDataAdapter.getIdAvailability(id);//checks whether the equipment is currently in service
+		boolean isEquipmentInCondemnList = this.isEquipmentcondemned(id);//checks whether the equipment is in condemned list
+		
+		if(isEquipmentinActiveList || isEquipmentInCondemnList) {
+			//if either of the lists have the asset id, it is not available. Return false.
+			return false;
+		}
+		else {
+			//if the asset id is not in both the lists asset id is available. Return true.
+			return true;
+		}
+		
+		
 	}
 	
 	//saves an equipment on the database
@@ -230,6 +255,136 @@ public class EquipmentApi {
 		return warrantyEndDate;
 				
 	}
+	
+	//add the equipment to pending condemn list on request
+	public PendingCondemnEquipment requestEquipmentCondemn(CondemnRequest condemnRequest) {
+		
+		System.out.println("Request recieved for condemn asset id : " +condemnRequest.getAssetId());
+		
+		//initialize pending condemn equipment
+		PendingCondemnEquipment pendingCondemnEquipment = new PendingCondemnEquipment();
+		
+		//get equipment for asset id
+		Equipment equipment = this.getEquipmentForAssetId(condemnRequest.getAssetId());
+		
+		System.out.println("Equipment recieved for asset id : " + equipment.toString());
+		
+		pendingCondemnEquipment.setAssetId(equipment.getAssetId());
+		pendingCondemnEquipment.setCondemnReason(condemnRequest.getReason());
+		pendingCondemnEquipment.setSerialNumber(equipment.getSerialNumber());
+		pendingCondemnEquipment.setType(equipment.getType());
+		pendingCondemnEquipment.setBrand(equipment.getBrand());
+		pendingCondemnEquipment.setModel(equipment.getModel());
+		pendingCondemnEquipment.setPurchaseDate(equipment.getPurchaseDate());
+		pendingCondemnEquipment.setWarrantyMonths(equipment.getWarrantyMonths());
+		pendingCondemnEquipment.setPurchaseOrderNumber(equipment.getPurchaseOrderNumber());
+		
+		System.out.println("PendingCondemnEquipment object set");
+		
+		return equipmentCondemnDataAdapter.savePendingCondemnEquipment(pendingCondemnEquipment);
+		
+	}
+	
+	//returns a list of pending condemn equipment
+	public List<PendingCondemnEquipment> getAllPendingCondemnEquipment(){
+		return equipmentCondemnDataAdapter.getAllPendingCondemnEquipment();
+	}
+	
+	//returns a list of condemned equipment
+	public List<CondemnedEquipment> getAllCondemnedEquipment(){
+		return equipmentCondemnDataAdapter.getAllCondemnedEquipment();
+	}
+	
+	//cancel the condemn request
+	//delete the pending condemn request
+	public long cancelCondemnRequest(long assetId) {
+		return equipmentCondemnDataAdapter.deletePendingCondemnEquipment(assetId);
+	}
+	
+	public long performCondemn(long assetId) {
+		
+		//instantiate the equipment based on asset id
+		Equipment equipment = this.getEquipmentForAssetId(assetId);
+		
+		//instantiate condemned equipment
+		CondemnedEquipment condemnedEquipment = new CondemnedEquipment();
+		
+		//set the attributes of the condemned equipment
+		condemnedEquipment.setAssetId(equipment.getAssetId());
+		condemnedEquipment.setSerialNumber(equipment.getSerialNumber());
+		condemnedEquipment.setType(equipment.getType());
+		condemnedEquipment.setLocation(equipment.getLocation());
+		condemnedEquipment.setDepartment(equipment.getDepartment());
+		condemnedEquipment.setBrand(equipment.getBrand());
+		condemnedEquipment.setModel(equipment.getModel());
+		condemnedEquipment.setPurchaseDate(equipment.getPurchaseDate());
+		condemnedEquipment.setWarrantyMonths(equipment.getWarrantyMonths());
+		condemnedEquipment.setPurchaseOrderNumber(equipment.getPurchaseOrderNumber());
+		condemnedEquipment.setSupplier(equipment.getSupplier());
+		condemnedEquipment.setIpAddress(equipment.getIpAddress());
+		condemnedEquipment.setWorkStationId(equipment.getWorkStationId());
+		
+		condemnedEquipment.setSupplierName(supplierApi.getSupplierNameForId(equipment.getSupplier()));
+		condemnedEquipment.setDepartmentName(departmentApi.getDepartmentNameById(equipment.getDepartment()));
+		
+		System.out.println("condemned equipment object set with id : " + condemnedEquipment.getAssetId());
+		
+		equipmentCondemnDataAdapter.saveCondemnedEquipment(condemnedEquipment);
+		System.out.println("Saved condemned equipment with id: " + condemnedEquipment.getAssetId());
+		
+		//delete the original entry from the equipment list
+		long deletedEquipmentId = equipmentDataAdapter.deleteById(assetId);
+		System.out.println("Deleted equipment with id : " + deletedEquipmentId);
+		
+		return deletedEquipmentId;
+	}
+	
+	//checks whether an equipment is condemned
+	//return true if the equipment is condemned
+	public boolean isEquipmentcondemned (long assetId) {
+		
+		//get the condemned equipment list
+		List<CondemnedEquipment> condemnedEquipmentList = this.getAllCondemnedEquipment();
+		
+		//iterate through the list
+		for(CondemnedEquipment equipment: condemnedEquipmentList) {
+			long condemnedId = equipment.getAssetId();
+			
+			//if the condemned id equals given asset id the equipment is conedemned.
+			//return true
+			if(assetId == condemnedId) {
+				return true;
+			}
+		}
+		
+		//equipment was not in the condemned list
+		//return false
+		return false;
+	}
+	
+	//checks whether the equipment is marked for condemn
+	//return true if equipment is marked for condemn
+	public boolean isEquipmentMarkedForCondemn(long assetId){
+		
+		//get the condemn pending equipment list
+		List<PendingCondemnEquipment> pendingCondemnEquipmentList = this.getAllPendingCondemnEquipment();
+		
+		//iterate through the list
+		for(PendingCondemnEquipment pendingEquipment : pendingCondemnEquipmentList) {
+			long pendingId = pendingEquipment.getAssetId();
+			//if the pending id equals to asset id given, equipment is marked for condemn
+			//return true
+			if(assetId == pendingId) {
+				return true;
+			}
+		}
+		
+		//equipment is not in the pendingCondemnEquipmentList
+		//return false
+		return false;
+	}
+	
+	
 	
 	
 
