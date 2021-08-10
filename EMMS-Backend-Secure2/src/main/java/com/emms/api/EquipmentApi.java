@@ -58,10 +58,18 @@ public class EquipmentApi {
 	public boolean getIdAvailability (long id) {
 		//return equipmentDataAdapter.getIdAvailability(id); -- this was available earlier
 		
-		boolean isEquipmentinActiveList = equipmentDataAdapter.getIdAvailability(id);//checks whether the equipment is currently in service
+		System.out.println("Checking id : " + id);
+		
+		//equipmentDataAdapter returns true if the equipment is available
+		//therefore it has to be flipped when assigning to the isEquipmentinActiveList variable
+		boolean isEquipmentinActiveList = !equipmentDataAdapter.getIdAvailability(id);//checks whether the equipment is currently in service
 		boolean isEquipmentInCondemnList = this.isEquipmentcondemned(id);//checks whether the equipment is in condemned list
 		
 		if(isEquipmentinActiveList || isEquipmentInCondemnList) {
+			System.out.println("isEquipmentinActiveList : " + isEquipmentinActiveList);
+			System.out.println("isEquipmentInCondemnList : " + isEquipmentInCondemnList);
+			
+			System.out.println("Id is not avilable");
 			//if either of the lists have the asset id, it is not available. Return false.
 			return false;
 		}
@@ -331,6 +339,9 @@ public class EquipmentApi {
 		
 		equipmentCondemnDataAdapter.saveCondemnedEquipment(condemnedEquipment);
 		System.out.println("Saved condemned equipment with id: " + condemnedEquipment.getAssetId());
+		
+		//delete the entry from the pending list
+		equipmentCondemnDataAdapter.deletePendingCondemnEquipment(assetId);
 		
 		//delete the original entry from the equipment list
 		long deletedEquipmentId = equipmentDataAdapter.deleteById(assetId);

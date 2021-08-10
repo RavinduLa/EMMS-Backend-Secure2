@@ -16,7 +16,7 @@ import com.emms.archiveModels.DepartmentArchive;
 import com.emms.archiveModels.SupplierArchive;
 import com.emms.dal.adapter.EquipmentDataAdapter;
 import com.emms.inventoryDao.EquipmentRepository;
-
+import com.emms.inventoryDao.PendingCondemnEquipmentRepo;
 import com.emms.inventoryModel.Equipment;
 
 @Component
@@ -353,5 +353,7 @@ public class EquipmentDataAdapterImpl implements EquipmentDataAdapter {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 
 }
