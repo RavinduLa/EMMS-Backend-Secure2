@@ -1,4 +1,4 @@
-package com.emms.password;
+/*package com.emms.password;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -19,4 +19,4 @@ public class PasswordGenerator {
 
 	}
 
-}
+}*/
